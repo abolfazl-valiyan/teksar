@@ -302,39 +302,54 @@ def upload_file(request):
         return redirect('file_list')
 
     return render(request, 'upload.html')
+# @login_required
+# def file_list(request):
+#     files = File.objects.filter(user=request.user).order_by('-created_at')
+#
+#     for f in files:
+#         display = 'در حال انجام'
+#         if f.status == 'done':
+#             display = 'اوکی'
+#         elif f.status == 'failed':
+#             display = 'ناموفق'
+#
+#         if f.task_id:
+#             try:
+#                 state = AsyncResult(f.task_id).state
+#                 if state in ('PENDING', 'RECEIVED', 'STARTED', 'RETRY'):
+#                     display = 'در حال انجام'
+#                     if f.status != 'processing':
+#                         f.status = 'processing'
+#                         f.save(update_fields=['status'])
+#                 elif state == 'SUCCESS':
+#                     display = 'اوکی'
+#                     if f.status != 'done':
+#                         f.status = 'done'
+#                         f.save(update_fields=['status'])
+#                 elif state in ('FAILURE', 'REVOKED'):
+#                     display = 'ناموفق'
+#                     if f.status != 'failed':
+#                         f.status = 'failed'
+#                         f.save(update_fields=['status'])
+#             except Exception:
+#                 pass
+#
+#         f.display_status = display
+#
+#     return render(request, 'file_list.html', {'files': files})
 @login_required
 def file_list(request):
     files = File.objects.filter(user=request.user).order_by('-created_at')
 
+    status_map = {
+        'pending': 'در حال انتظار',
+        'processing': 'در حال انجام',
+        'done': 'اوکی',
+        'failed': 'ناموفق',
+    }
+
     for f in files:
-        display = 'در حال انجام'
-        if f.status == 'done':
-            display = 'اوکی'
-        elif f.status == 'failed':
-            display = 'ناموفق'
-
-        if f.task_id:
-            try:
-                state = AsyncResult(f.task_id).state
-                if state in ('PENDING', 'RECEIVED', 'STARTED', 'RETRY'):
-                    display = 'در حال انجام'
-                    if f.status != 'processing':
-                        f.status = 'processing'
-                        f.save(update_fields=['status'])
-                elif state == 'SUCCESS':
-                    display = 'اوکی'
-                    if f.status != 'done':
-                        f.status = 'done'
-                        f.save(update_fields=['status'])
-                elif state in ('FAILURE', 'REVOKED'):
-                    display = 'ناموفق'
-                    if f.status != 'failed':
-                        f.status = 'failed'
-                        f.save(update_fields=['status'])
-            except Exception:
-                pass
-
-        f.display_status = display
+        f.display_status = status_map.get(f.status, 'نامشخص')
 
     return render(request, 'file_list.html', {'files': files})
 @login_required
