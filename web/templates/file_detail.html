@@ -1,0 +1,161 @@
+{#<!DOCTYPE html>#}
+{#<html lang="fa" dir="rtl">#}
+{#<head>#}
+{#  <meta charset="UTF-8" />#}
+{#  <title>جزئیات فایل | {{ file.filename }}</title>#}
+{#  <style>#}
+{#    body { font-family: sans-serif; line-height: 1.7; background:#f8f9fa; padding:20px; }#}
+{#    .container { max-width: 900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }#}
+{#    .meta { margin-bottom: 1rem; }#}
+{#    .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #eee; margin-left: 6px; }#}
+{#    .status { font-weight: bold; }#}
+{#    pre { background: #0f172a; color: #e5e7eb; padding: 12px; border-radius: 8px; overflow:auto; max-height:400px; }#}
+{#    .section { margin-top: 1.5rem; }#}
+{#    .muted { color: #64748b; }#}
+{#    a { text-decoration:none; color:#2563eb; }#}
+{#  </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#  <div class="container">#}
+{#    <h1>جزئیات فایل</h1>#}
+{##}
+{#    <div class="meta">#}
+{#      <div><span class="badge">نام</span> {{ file.filename }}</div>#}
+{#      <div><span class="badge">تاریخ</span> {{ file.created_at|date:"Y/m/d H:i" }}</div>#}
+{#      <div><span class="badge">حجم</span> {{ size_kb }} KB</div>#}
+{#      <div>#}
+{#        <span class="badge">وضعیت</span>#}
+{#        <span class="status">{{ file.get_status_display }}</span>#}
+{#      </div>#}
+{#      {% if file.error_message %}#}
+{#        <div><span class="badge">خطا</span> <span style="color:#ef4444">{{ file.error_message }}</span></div>#}
+{#      {% endif %}#}
+{#      <div>#}
+{#        <span class="badge">گزینه‌ها</span>#}
+{#        {% if file.is_subtitle %} SRT {% else %} <span class="muted">SRT غیرفعال</span> {% endif %} |#}
+{#        {% if file.is_text %} Text {% else %} <span class="muted">Text غیرفعال</span> {% endif %}#}
+{#      </div>#}
+{#    </div>#}
+{##}
+{#    {% if file.status != 'done' %}#}
+{#      <p class="muted">پردازش هنوز کامل نشده. بعد از اتمام، محتوای انتخاب‌شده نمایش داده می‌شود.</p>#}
+{#    {% endif %}#}
+{##}
+{#    {% if srt_content %}#}
+{#      <div class="section">#}
+{#        <h2>محتوای SRT</h2>#}
+{#        <pre>{{ srt_content }}</pre>#}
+{#      </div>#}
+{#    {% elif file.is_subtitle %}#}
+{#      <div class="muted">SRT انتخاب شده بود، اما هنوز محتوایی ذخیره نشده است.</div>#}
+{#    {% endif %}#}
+{##}
+{#    {% if txt_content %}#}
+{#      <div class="section">#}
+{#        <h2>متن استخراج‌شده</h2>#}
+{#        <pre>{{ txt_content }}</pre>#}
+{#      </div>#}
+{#    {% elif file.is_text %}#}
+{#      <div class="muted">Text انتخاب شده بود، اما هنوز محتوایی ذخیره نشده است.</div>#}
+{#    {% endif %}#}
+{##}
+{#    <div class="section">#}
+{#      <a href="{% url 'file_list' %}">⬅ بازگشت به لیست</a>#}
+{#    </div>#}
+{#  </div>#}
+{##}
+{#</body>#}
+{#</html>#}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>جزئیات فایل | {{ file.filename }}</title>
+  <style>
+    body {font-family:sans-serif; line-height:1.7; background:#f8f9fa; padding:20px;}
+    .container {max-width:900px; margin:auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+    .meta {margin-bottom:1.5rem;}
+    .badge {display:inline-block; padding:4px 10px; border-radius:6px; background:#eee; font-size:0.9rem; margin-left:8px;}
+    .status {font-weight:bold; font-size:1.1rem;}
+    pre {background:#0f172a; color:#e5e7eb; padding:16px; border-radius:8px; overflow:auto; max-height:500px; direction:ltr; text-align:left; font-family:monospace;}
+    .section {margin-top:2rem;}
+    .muted {color:#64748b;}
+    a {color:#2563eb; text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    .download-btns {margin-top:1rem;}
+    .btn {display:inline-block; padding:10px 16px; margin:0 8px 8px 0; border-radius:8px; font-weight:bold;}
+    .btn-srt {background:#e0f2fe; color:#0369a1;}
+    .btn-txt {background:#dcfce7; color:#166534;}
+    .btn-zip {background:#fef3c7; color:#92400e;}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>جزئیات فایل</h1>
+
+    <div class="meta">
+      <div><span class="badge">نام</span> {{ file.filename }}</div>
+      <div><span class="badge">تاریخ</span> {{ file.created_at|date:"Y/m/d H:i" }}</div>
+      <div><span class="badge">حجم</span> {{ size_kb|floatformat:1 }} KB</div>
+      <div>
+        <span class="badge">وضعیت</span>
+        <span class="status {% if file.status == 'done' %}text-success{% elif file.status == 'failed' %}text-danger{% else %}text-warning{% endif %}">
+          {{ file.display_status|default:file.get_status_display }}
+        </span>
+      </div>
+
+      {% if file.error_message %}
+        <div style="margin-top:1rem; padding:12px; background:#fee2e2; border-radius:8px; color:#991b1b;">
+          <strong>خطا:</strong> {{ file.error_message }}
+        </div>
+      {% endif %}
+
+      <div style="margin-top:1rem;">
+        <span class="badge">خروجی‌ها</span>
+        {% if file.is_subtitle %} زیرنویس (SRT) {% endif %}
+        {% if file.is_text %} متن کامل (TXT) {% endif %}
+      </div>
+    </div>
+
+    <!-- دکمه‌های دانلود وقتی کار تموم شده -->
+    {% if file.status == 'done' %}
+      <div class="download-btns">
+        {% if file.is_subtitle %}
+          <a href="{% url 'download' file.id 'srt' %}" class="btn btn-srt">دانلود SRT</a>
+        {% endif %}
+        {% if file.is_text %}
+          <a href="{% url 'download' file.id 'txt' %}" class="btn btn-txt">دانلود TXT</a>
+        {% endif %}
+        {% if file.is_text and file.is_subtitle %}
+          <a href="{% url 'download' file.id 'zip' %}" class="btn btn-zip">دانلود ZIP (هر دو)</a>
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="muted">در حال پردازش فایل... چند دقیقه دیگر مراجعه کنید.</p>
+    {% endif %}
+
+    <!-- نمایش محتوای SRT -->
+    {% if srt_content %}
+      <div class="section">
+        <h2>محتوای زیرنویس (SRT)</h2>
+        <pre>{{ srt_content }}</pre>
+      </div>
+    {% endif %}
+
+    <!-- نمایش محتوای TXT -->
+    {% if txt_content %}
+      <div class="section">
+        <h2>متن کامل</h2>
+        <pre>{{ txt_content }}</pre>
+      </div>
+    {% endif %}
+
+    <div class="section" style="margin-top:3rem;">
+      <a href="{% url 'file_list' %}">بازگشت به لیست فایل‌ها</a>
+    </div>
+  </div>
+
+</body>
+</html>

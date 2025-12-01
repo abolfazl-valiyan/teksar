@@ -1,0 +1,186 @@
+{#<!DOCTYPE html>#}
+{#<html lang="fa" dir="rtl">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>لیست فایل‌ها</title>#}
+{#  <style>#}
+{#    body {#}
+{#      font-family: sans-serif;#}
+{#      background: #f8fafc;#}
+{#      padding: 2rem;#}
+{#      line-height: 1.6;#}
+{#    }#}
+{#    h1 {#}
+{#      margin-bottom: 1rem;#}
+{#    }#}
+{#    table {#}
+{#      width: 100%;#}
+{#      border-collapse: collapse;#}
+{#      background: white;#}
+{#      border-radius: 8px;#}
+{#      overflow: hidden;#}
+{#      box-shadow: 0 2px 4px rgba(0,0,0,0.06);#}
+{#    }#}
+{#    th, td {#}
+{#      padding: 0.8rem 1rem;#}
+{#      border-bottom: 1px solid #e2e8f0;#}
+{#      text-align: right;#}
+{#    }#}
+{#    th {#}
+{#      background: #f1f5f9;#}
+{#      font-weight: bold;#}
+{#    }#}
+{#    tr:hover td {#}
+{#      background: #f9fafb;#}
+{#    }#}
+{#    a {#}
+{#      color: #2563eb;#}
+{#      text-decoration: none;#}
+{#    }#}
+{#    a:hover {#}
+{#      text-decoration: underline;#}
+{#    }#}
+{#    .status {#}
+{#      font-weight: bold;#}
+{#    }#}
+{#    .status.done { color: #16a34a; }#}
+{#    .status.pending { color: #ca8a04; }#}
+{#    .status.failed { color: #dc2626; }#}
+{#    .status.processing { color: #2563eb; }#}
+{#  </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#  <h1>📂 لیست فایل‌ها</h1>#}
+{##}
+{#  <table>#}
+{#    <thead>#}
+{#      <tr>#}
+{#        <th>نام فایل</th>#}
+{#        <th>تاریخ ایجاد</th>#}
+{#        <th>حجم (KB)</th>#}
+{#        <th>وضعیت</th>#}
+{#        <th>گزینه‌ها</th>#}
+{#      </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#      {% for f in files %}#}
+{#      <tr>#}
+{#        <td>#}
+{#          <a href="{% url 'file_detail' f.id %}">#}
+{#            {{ f.filename }}#}
+{#          </a>#}
+{#        </td>#}
+{#        <td>{{ f.created_at|date:"Y/m/d H:i" }}</td>#}
+{#        <td>#}
+{#          {% if f.data %}#}
+{#            {{ f.data|length|divisibleby:1024 }}#}
+{#          {% else %}#}
+{#            0#}
+{#          {% endif %}#}
+{#        </td>#}
+{#        <td class="status {{ f.status }}">#}
+{#          {{ f.get_status_display }}#}
+{#        </td>#}
+{#        <td>#}
+{#          <a href="{% url 'file_detail' f.id %}">جزئیات</a>#}
+{#        </td>#}
+{#      </tr>#}
+{#      {% empty %}#}
+{#      <tr>#}
+{#        <td colspan="5" style="text-align:center; color:#6b7280;">#}
+{#          هیچ فایلی پیدا نشد.#}
+{#        </td>#}
+{#      </tr>#}
+{#      {% endfor %}#}
+{#    </tbody>#}
+{#  </table>#}
+{##}
+{#</body>#}
+{#</html>#}
+{##}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لیست فایل‌ها</title>
+  <style>
+    body {font-family: sans-serif; background:#f8fafc; padding:2rem; line-height:1.6;}
+    h1 {margin-bottom:1rem;}
+    table {width:100%; border-collapse:collapse; background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 4px rgba(0,0,0,0.06);}
+    th, td {padding:0.9rem 1rem; border-bottom:1px solid #e2e8f0; text-align:right;}
+    th {background:#f1f5f9; font-weight:bold;}
+    tr:hover td {background:#f9fafb;}
+    a {color:#2563eb; text-decoration:none;}
+    a:hover {text-decoration:underline;}
+    .btn {display:inline-block; padding:6px 12px; margin:0 4px; border-radius:6px; font-size:0.9rem; text-align:center;}
+    .btn-srt {background:#e0f2fe; color:#0369a1;}
+    .btn-txt {background:#dcfce7; color:#166534;}
+    .btn-zip {background:#fef3c7; color:#92400e;}
+    .btn-detail {color:#64748b; font-size:0.85rem;}
+    .status {font-weight:bold;}
+    .status.done {color:#16a34a;}
+    .status.processing, .status.pending {color:#ca8a04;}
+    .status.failed {color:#dc2626;}
+  </style>
+</head>
+<body>
+
+  <h1>لیست فایل‌ها</h1>
+  <p><a href="{% url 'upload_file' %}">آپلود فایل جدید</a></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>نام فایل</th>
+        <th>تاریخ</th>
+        <th>حجم (KB)</th>
+        <th>وضعیت</th>
+        <th>گزینه‌ها</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in files %}
+      <tr>
+        <td>
+          <a href="{% url 'file_detail' f.id %}">{{ f.filename }}</a>
+        </td>
+        <td>{{ f.created_at|date:"Y/m/d H:i" }}</td>
+        <td>
+          {% if f.data %}
+            {{ f.data|length|floatformat:0|divisibleby:1024 }}
+          {% else %}
+            0
+          {% endif %}
+        </td>
+        <td class="status {{ f.status }}">{{ f.display_status|default:f.get_status_display }}</td>
+        <td>
+          {% if f.status == 'done' %}
+            {% if f.is_subtitle %}
+              <a href="{% url 'download' f.id 'srt' %}" class="btn btn-srt">SRT</a>
+            {% endif %}
+            {% if f.is_text %}
+              <a href="{% url 'download' f.id 'txt' %}" class="btn btn-txt">TXT</a>
+            {% endif %}
+            {% if f.is_text and f.is_subtitle %}
+              <a href="{% url 'download' f.id 'zip' %}" class="btn btn-zip">ZIP</a>
+            {% endif %}
+          {% else %}
+            <span style="color:#94a3b8;">در حال پردازش...</span>
+          {% endif %}
+          &nbsp;
+          <a href="{% url 'file_detail' f.id %}" class="btn-detail">جزئیات →</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" style="text-align:center; color:#94a3b8; padding:2rem;">
+          هنوز هیچ فایلی آپلود نکرده‌اید. <a href="{% url 'upload_file' %}">اولین فایل را آپلود کنید</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>
