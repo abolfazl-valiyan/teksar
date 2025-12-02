@@ -68,10 +68,14 @@
 {#</body>#}
 {#</html>#}
 <!DOCTYPE html>
+{% load jalali %}
+{% load static %}
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>جزئیات فایل | {{ file.filename }}</title>
+  <link rel="icon" type="image/png" href="{% static 'images/icon voice.ico' %} ">
+
   <style>
     body {font-family:sans-serif; line-height:1.7; background:#f8f9fa; padding:20px;}
     .container {max-width:900px; margin:auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);}
@@ -89,6 +93,7 @@
     .btn-txt {background:#dcfce7; color:#166534;}
     .btn-zip {background:#fef3c7; color:#92400e;}
   </style>
+
 </head>
 <body>
 
@@ -97,8 +102,13 @@
 
     <div class="meta">
       <div><span class="badge">نام</span> {{ file.filename }}</div>
-      <div><span class="badge">تاریخ</span> {{ file.created_at|date:"Y/m/d H:i" }}</div>
-      <div><span class="badge">حجم</span> {{ size_kb|floatformat:1 }} KB</div>
+      <div><span class="badge">تاریخ</span> {{ file.created_at|jalali }}</div>
+        <div>
+          <span class="badge">حجم</span>
+          &nbsp;<span dir="ltr">KB</span> {{ size_kb|floatformat:1 }}
+        </div>
+
+
       <div>
         <span class="badge">وضعیت</span>
         <span class="status {% if file.status == 'done' %}text-success{% elif file.status == 'failed' %}text-danger{% else %}text-warning{% endif %}">

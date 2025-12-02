@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'web.apps.WebConfig',
     'api.apps.ApiConfig',
-    'rest_framework'
+    'rest_framework',
+    'jalali_date'
 ]
 
 MIDDLEWARE = [
@@ -117,18 +118,18 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+import os
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS =[
+    os.path.join(BASE_DIR , 'static')
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

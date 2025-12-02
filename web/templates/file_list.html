@@ -100,10 +100,13 @@
 {#</html>#}
 {##}
 <!DOCTYPE html>
+{% load jalali %}
+{% load static %}
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>لیست فایل‌ها</title>
+    <link rel="icon" type="image/png" href="{% static 'images/icon voice.ico' %} ">
   <style>
     body {font-family: sans-serif; background:#f8fafc; padding:2rem; line-height:1.6;}
     h1 {margin-bottom:1rem;}
@@ -145,13 +148,9 @@
         <td>
           <a href="{% url 'file_detail' f.id %}">{{ f.filename }}</a>
         </td>
-        <td>{{ f.created_at|date:"Y/m/d H:i" }}</td>
-        <td>
-          {% if f.data %}
-            {{ f.data|length|floatformat:0|divisibleby:1024 }}
-          {% else %}
-            0
-          {% endif %}
+        <td>{{ f.created_at|jalali }}</td>
+        <td dir="ltr">
+            {{f.size_kb|floatformat:1 }} KB
         </td>
         <td class="status {{ f.status }}">{{ f.display_status|default:f.get_status_display }}</td>
         <td>

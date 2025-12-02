@@ -184,14 +184,19 @@ def file_list(request):
     status_map = {
         'pending': 'در حال انتظار',
         'processing': 'در حال انجام',
-        'done': 'اوکی',
+        'done': 'انجام شد',
         'failed': 'ناموفق',
     }
 
     for f in files:
         f.display_status = status_map.get(f.status, 'نامشخص')
 
+
+        size_bytes = len(f.data) if f.data else 0
+        f.size_kb = round(size_bytes / 1024, 1)
+
     return render(request, 'file_list.html', {'files': files})
+
 @login_required
 def file_detail(request, pk):
     f = get_object_or_404(File, pk=pk, user=request.user)
