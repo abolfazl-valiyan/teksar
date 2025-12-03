@@ -65,6 +65,7 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+
 7. **دسترسی به وب‌سایت:**
 
    در مرورگر خود به آدرس http://127.0.0.1:8000/ بروید.
