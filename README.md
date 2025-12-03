@@ -46,13 +46,14 @@ venv\Scripts\activate  # برای ویندوز
 ```bash
 pip install -r requirements.txt
 ```
-4. ** دانلود مدل whisper:**
+4. **دانلود مدل whisper:**
 
 ```bash
 https://huggingface.co/ivrit-ai/whisper-large-v3-ct2/tree/main
 ```
 در پروژه دایرکتوری models را ایجاد کنید و پوشه
-whisper-large-v3-ct2 را به دایرکتوری models اضافه کنید 
+whisper-large-v3-ct2 را به دایرکتوری models اضافه کنید
+
 
 5. **اجرای migrations:**
 
