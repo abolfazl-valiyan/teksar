@@ -53,6 +53,7 @@ https://huggingface.co/ivrit-ai/whisper-large-v3-ct2/tree/main
 ```
 در پروژه دایرکتوری models را ایجاد کنید و پوشه
 whisper-large-v3-ct2 را به دایرکتوری models اضافه کنید 
+
 5. **اجرای migrations:**
 
 ```bash
