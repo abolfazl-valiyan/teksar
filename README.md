@@ -60,7 +60,53 @@ whisper-large-v3-ct2 را به دایرکتوری models اضافه کنید
 ```bash
 python manage.py migrate
 ```
-6. **اجرای سرور:**
+6. **اجرای ردیس:**
+
+در مک:
+
+```bash
+brew install redis # نصب Redis
+brew services start redis # اجرای Redis
+brew services stop redis # توقف Redis
+redis-server # اجرای موقت (بدون سرویس)
+``` 
+
+در ویندوز:
+
+```bash
+https://github.com/microsoftarchive/redis/releases
+```
+در مرحله اول فایل Redis-x64-xxx.zip را دانلود کنید
+
+```bash
+redis-server.exe
+```
+داخل پوشه فایل بالا را اجرا کنید
+
+در لینکوس (Ubuntu / Debian):
+
+```bash
+sudo apt update
+sudo apt install redis-server # نصب Redis
+redis-server # اجرا
+sudo systemctl start redis # اجرا به‌عنوان سرویس
+```
+
+7. **اجرای celery:**
+
+در ویندوز :
+
+```bash
+celery -A teksar worker --pool=solo -l info
+```
+
+در مک و لینوکس(Ubuntu, Debian, CentOS):
+
+```bash
+celery -A teksar worker -l info
+```
+
+8. **اجرای سرور:**
 
 ```bash
 python manage.py runserver

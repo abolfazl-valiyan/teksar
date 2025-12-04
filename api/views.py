@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import magic
-from web.views import transcribe_audio_from_bytes, transcribe_video_from_bytes
+from web.tasks import transcribe_audio_from_bytes, transcribe_video_from_bytes
 from .serializers import *
 
 ALLOWED_AUDIO = ['audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/x-m4a']
